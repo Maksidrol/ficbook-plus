@@ -1,0 +1,30 @@
+# Build artifacts
+build/
+app/build/
+
+# Gradle
+.gradle/
+*.gradle.kts.bak
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Kotlin
+.kotlin/
+
+# Local machine config (contains SDK path)
+local.properties
+
+# Keystore (keep safe, never commit)
+*.keystore
+*.jks
+keystore.properties
+
+# Working files not part of the project
+css_dump/
+feather.png
+icon.jpg
+script.user.js
+org/

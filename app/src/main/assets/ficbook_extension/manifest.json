@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "Ficbook Material 3 Reader",
+  "version": "1.0.0",
+  "description": "Material 3 Dark Reader for ficbook.net",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://ficbook.net/*",
+        "*://*.ficbook.net/*"
+      ],
+      "js": ["ficbook_reader.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "*://ficbook.net/*",
+        "*://*.ficbook.net/*"
+      ],
+      "js": ["ficbook_home.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [
+    "geckoViewAddons"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ficbook-reader@app"
+    }
+  }
+}
