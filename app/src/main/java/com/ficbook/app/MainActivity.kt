@@ -160,8 +160,19 @@ class MainActivity : ComponentActivity() {
         handler.postDelayed({ if (!destroyed) splashDone = true }, 5000)
 
         s.progressDelegate = object : GeckoSession.ProgressDelegate {
+            private var updateChecked = false
             override fun onPageStop(session: GeckoSession, success: Boolean) {
-                handler.post { if (!destroyed) splashDone = true }
+                handler.post {
+                    if (!destroyed) {
+                        splashDone = true
+                        if (!updateChecked) {
+                            updateChecked = true
+                            handler.postDelayed({
+                                if (!destroyed) UpdateChecker.check(this@MainActivity)
+                            }, 3000)
+                        }
+                    }
+                }
             }
         }
 
