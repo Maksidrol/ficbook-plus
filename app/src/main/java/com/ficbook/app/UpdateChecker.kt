@@ -20,6 +20,7 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 
 object UpdateChecker {
 
@@ -241,10 +242,14 @@ object UpdateChecker {
             prefs.edit().putString(PREF_SKIPPED, version).apply()
             dialog.dismiss()
         }
+        val cancelled = AtomicBoolean(false)
         val btnClose = makeSecondaryBtn("Закрыть").apply {
             visibility = View.GONE
             setTextColor(Color.parseColor("#D0BCFF"))
-            setOnClickListener { dialog.dismiss() }
+            setOnClickListener {
+                cancelled.set(true)
+                dialog.dismiss()
+            }
         }
         progressBlock.addView(btnClose, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
@@ -253,13 +258,13 @@ object UpdateChecker {
             btnUpdate.visibility = View.GONE
             secondaryRow.visibility = View.GONE
             progressBlock.visibility = View.VISIBLE
-            downloadAndInstall(context, apkUrl, progressFill, progressLabel, dialog,
+            btnClose.visibility = View.VISIBLE
+            downloadAndInstall(context, apkUrl, progressFill, progressLabel, dialog, cancelled,
                 getAnimator = { progressAnimator },
                 setAnimator = { progressAnimator = it },
                 onError = {
                 progressLabel.text = "Ошибка загрузки. Попробуйте позже."
                 progressLabel.setTextColor(Color.parseColor("#FFB4AB"))
-                btnClose.visibility = View.VISIBLE
             })
         }
 
@@ -282,6 +287,7 @@ object UpdateChecker {
         progressFill: View,
         progressLabel: TextView,
         dialog: Dialog,
+        cancelled: AtomicBoolean,
         getAnimator: () -> ObjectAnimator?,
         setAnimator: (ObjectAnimator?) -> Unit,
         onError: () -> Unit
@@ -293,6 +299,8 @@ object UpdateChecker {
 
                 val conn = URL(url).openConnection() as HttpURLConnection
                 try {
+                    conn.connectTimeout = 15000
+                    conn.readTimeout = 60000
                     conn.connect()
                     val total = conn.contentLength
 
@@ -303,6 +311,7 @@ object UpdateChecker {
                             var n: Int
                             var lastUiUpdate = 0L
                             while (input.read(buf).also { n = it } != -1) {
+                                if (cancelled.get()) return@execute
                                 output.write(buf, 0, n)
                                 downloaded += n
                                 if (total > 0) {
@@ -329,6 +338,8 @@ object UpdateChecker {
                     conn.disconnect()
                 }
 
+                if (cancelled.get()) return@execute
+
                 val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
                 val intent = Intent(Intent.ACTION_VIEW).apply {
                     setDataAndType(uri, "application/vnd.android.package-archive")
@@ -337,12 +348,12 @@ object UpdateChecker {
                 mainHandler.post {
                     if (context is Activity && !context.isFinishing && !context.isDestroyed) {
                         dialog.dismiss()
+                        context.startActivity(intent)
                     }
-                    context.startActivity(intent)
                 }
             } catch (_: Exception) {
                 mainHandler.post {
-                    if (context is Activity && !context.isFinishing && !context.isDestroyed) {
+                    if (!cancelled.get() && context is Activity && !context.isFinishing && !context.isDestroyed) {
                         onError()
                     }
                 }

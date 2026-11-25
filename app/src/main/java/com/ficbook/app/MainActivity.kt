@@ -28,11 +28,11 @@ class MainActivity : ComponentActivity() {
     private var session: GeckoSession? = null
     private var geckoView: GeckoView? = null
     private var canGoBack = false
-    private var currentUrl: String = HOME_URL
+    @Volatile private var currentUrl: String = HOME_URL
     private val handler = Handler(Looper.getMainLooper())
     private var destroyed = false
     private var splashDone = false
-    private var inAuthFlow = false
+    @Volatile private var inAuthFlow = false
     private val authFlowTimeout = Runnable { inAuthFlow = false }
 
     companion object {

@@ -25,7 +25,5 @@ Android-приложение на Kotlin + GeckoView (Firefox). Стили и л
 ## Сборка
 
 ```bash
-./gradlew assembleDebug
+./gradlew assembleRelease
 ```
-
-> APK подписан debug-ключом.

@@ -136,8 +136,8 @@
         .dark-theme #searchDiv .common-search .show-all-button { background-color: var(--md-surface-container-high) !important; color: var(--md-on-surface-variant) !important; }
         /* Hover/active в боковой навигации — коричневый */
         .dark-theme .nav-info ul a:hover { background-color: var(--md-primary-container) !important; color: var(--md-primary) !important; }
-        /* Плашка "Новое" — белый фон */
-        .dark-theme .read-notification .read-decoration-text { background-color: var(--md-primary-container) !important; color: var(--md-primary) !important; border-color: rgba(255,255,255,0.12) !important; }
+        /* Плашка "Прочитано" */
+        .dark-theme .read-notification .read-decoration-text { background-color: var(--md-primary-container) !important; color: var(--md-primary) !important; border-color: rgba(255,255,255,0.12) !important; border-radius: 9999px !important; }
         /* Фон за иконками платёжных систем */
         .dark-theme .payment-option-container img { background: var(--md-surface-container-high) !important; border-radius: 8px !important; }
         /* Активный пункт в боковой навигации — коричневый хардкод */
@@ -232,6 +232,7 @@
         #m3-search-row .count-badge {
             background: var(--md-primary) !important;
             color: var(--md-surface-nav) !important;
+            border-radius: 9999px !important;
         }
         /* Скрываем выпадающую панель поиска — она встроена в .site-search */
         #m3-search-row .site-search-panel { display: none !important; }
@@ -406,13 +407,20 @@
         .notification .font-bold { color: var(--md-on-surface) !important; }
         .notification .date { color: var(--md-on-surface-muted) !important; }
         .notification .word-break { color: var(--md-on-surface-variant) !important; }
+        .img-circle { border-radius: 50% !important; }
+        .notification .user-photo img,
+        .notification .user-avatar img,
+        .notification .avatar img,
+        .notification .avatar-cropper img { border-radius: 50% !important; }
         .all-notification-link { border-top: 1px solid rgba(255,255,255,0.08) !important; }
         .all-notification-link a { color: var(--md-primary) !important; }
         .all-notification-link a:hover { color: var(--md-primary) !important; }
         .notifications-badge {
             background: var(--md-primary) !important;
             color: var(--md-surface-container) !important;
+            border-radius: 9999px !important;
         }
+        .badge { border-radius: 9999px !important; }
 
         /* Bootstrap модалки и их backdrop — выше settings sheet */
         .modal-backdrop { z-index: 400 !important; }
@@ -491,6 +499,7 @@
             background: var(--md-surface-tint) !important;
             color: var(--md-on-surface-variant) !important;
             border-color: rgba(255,255,255,0.12) !important;
+            border-radius: 20px !important;
         }
         a.ds-btn:hover, button.ds-btn:hover,
         a.ds-btn:focus, button.ds-btn:focus {
@@ -523,7 +532,7 @@
         .ds-btn.loading { opacity: 0.6 !important; pointer-events: none !important; }
         .ds-btn.disabled, .ds-btn[disabled] { opacity: 0.4 !important; pointer-events: none !important; }
         /* Кнопки оценки отзывов */
-        .btn-assessment { background: var(--md-surface-tint) !important; color: var(--md-on-surface-variant) !important; border-color: rgba(255,255,255,0.15) !important; }
+        .btn-assessment { background: var(--md-surface-tint) !important; color: var(--md-on-surface-variant) !important; border-color: rgba(255,255,255,0.15) !important; border-radius: 20px !important; }
         .btn-assessment.active { color: #fff !important; border-color: transparent !important; }
         .btn-assessment.btn-good-assessment.active { background: #0D2B0D !important; }
         .btn-assessment.btn-neutral-assessment.active { background: #3A3A4A !important; }
@@ -538,13 +547,14 @@
             background: var(--md-surface-tint) !important;
             color: var(--md-on-surface-variant) !important;
             border-color: rgba(255,255,255,0.12) !important;
+            border-radius: 50% !important;
         }
         button.ds-btn-icon svg, button.ds-btn.ds-btn-icon svg { fill: var(--md-on-surface-variant) !important; }
 
         /* ── Пагинация ── */
         .pagination li a, .pagination li span,
         .ds-pagination a, .ds-pagination span,
-        .pagination span.active, .ds-pagination span.active { background: var(--md-surface-tint) !important; color: var(--md-on-surface-variant) !important; border-color: rgba(255,255,255,0.12) !important; }
+        .pagination span.active, .ds-pagination span.active { background: var(--md-surface-tint) !important; color: var(--md-on-surface-variant) !important; border-color: rgba(255,255,255,0.12) !important; border-radius: 8px !important; }
         .pagination li.active a, .ds-pagination .active { background: var(--md-primary-container) !important; color: var(--md-secondary) !important; }
 
         /* ── Bottom Nav ── */
@@ -882,14 +892,18 @@
         a.tag:active { background: var(--md-surface-tint-active) !important; }
         a.tag.tag-adult { background: rgba(255,80,80,0.06) !important; color: var(--md-error) !important; border-color: rgba(255,180,171,0.6) !important; }
         a.tag.tag-adult::after { display: none !important; }
-        /* Теги-спойлеры */
+        /* Теги-спойлеры — показываем с блюром вместо скрытой кнопки */
         a.tag.tag-spoiler { background: #1A2A1A !important; color: #80C080 !important; border-color: #2A4A2A !important; }
         a.tag.tag-spoiler::after { background: transparent !important; color: #80C080 !important; border-radius: 0 2px 2px 0 !important; }
+        /* Переопределяем Bootstrap .hidden для спойлеров — показываем их сразу с блюром без ожидания JS */
+        a.tag.tag-spoiler.hidden { display: inline-block !important; filter: blur(4px) !important; cursor: pointer !important; user-select: none !important; }
+        a.tag.tag-spoiler.m3-spoiler-hidden { filter: blur(4px) !important; cursor: pointer !important; user-select: none !important; transition: filter 0.2s ease !important; }
+        a.tag.tag-spoiler.m3-spoiler-hidden:active { filter: blur(0px) !important; }
+        /* Кнопка "Спойлеры ..." — скрываем, т.к. показываем теги блюром */
+        .show-hidden-tags-btn, .js-show-hidden-tags { display: none !important; }
 
         .tags { margin-top: 8px !important; line-height: 2 !important; }
         .tags .font-bold { color: var(--md-on-surface-muted) !important; font-size: calc(var(--m3-font-scale, 1) * 11px) !important; }
-        /* Кнопка "показать скрытые теги" */
-        .show-hidden-tags-btn, .js-show-hidden-tags { color: var(--md-secondary) !important; }
 
         /* ── Vue select (сортировка, выпадающие) ── */
         .v-select, .vs__dropdown-toggle,
@@ -982,6 +996,7 @@
         /* Полученное достижение — полная яркость + лёгкий тинт */
         .achievement-item.css-received {
             background: var(--md-primary-container) !important;
+            border-radius: 8px !important;
             opacity: 1 !important;
         }
 
@@ -1178,6 +1193,7 @@
             background: var(--md-surface-tint) !important;
             color: var(--md-on-surface-variant) !important;
             border-color: rgba(255,255,255,0.15) !important;
+            border-radius: 50% !important;
         }
 
         /* ── Промо сетка обложек ── */
@@ -1464,8 +1480,32 @@
         }
     }
 
+    function applySpoilerTags(root) {
+        // Ficbook скрывает спойлер-теги через Bootstrap .hidden.
+        // Мы убираем hidden, показываем тег с блюром, клик снимает блюр.
+        const tags = (root.matches && root.matches('a.tag.tag-spoiler'))
+            ? [root]
+            : [...(root.querySelectorAll ? root.querySelectorAll('a.tag.tag-spoiler') : [])];
+        tags.forEach(tag => {
+            if (tag.dataset.m3Spoiler) return;
+            tag.dataset.m3Spoiler = '1';
+            tag.classList.remove('hidden');
+            tag.classList.add('m3-spoiler-hidden');
+            tag.addEventListener('click', e => {
+                if (tag.classList.contains('m3-spoiler-hidden')) {
+                    e.preventDefault();
+                    tag.classList.remove('m3-spoiler-hidden');
+                }
+            });
+        });
+    }
+
     function tagCardsWithDirection() {
         document.querySelectorAll('article.fanfic-inline').forEach(applyDirectionToCard);
+    }
+
+    function applyAllSpoilerTags() {
+        applySpoilerTags(document.body);
     }
 
     const adObserver = new MutationObserver(mutations => {
@@ -1475,6 +1515,7 @@
                 if (node.id === 'm3-top-bar' || node.id === 'm3-bottom-nav' || node.id === 'm3-profile-scrim' || node.id === 'm3-profile-sheet') continue;
                 applyDirectionToCard(node);
                 try { node.querySelectorAll('article.fanfic-inline').forEach(applyDirectionToCard); } catch (_) {}
+                applySpoilerTags(node);
                 if (matchesAd(node)) {
                     node.remove();
                 } else {
@@ -2123,6 +2164,7 @@
         removeAds();
         applyAllBlocks();
         tagCardsWithDirection();
+        applyAllSpoilerTags();
         adObserver.observe(document.body, { childList: true, subtree: true });
 
         // Баннер "скачай приложение" — ищем по содержимому, не по Vue scoped hash
